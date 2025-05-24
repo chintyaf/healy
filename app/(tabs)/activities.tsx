@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, ScrollView, SafeAreaView, TouchableOpacity, Image } from 'react-native';
 import { colors, typography, spacing, borderRadius, shadows } from '@/utils/theme';
 import { activitySuggestions } from '@/utils/mockData';
-import { Filter, Play, Calendar, Clock, Bookmark } from 'lucide-react-native';
+import { Filter, Play, Calendar, Clock, Bookmark, Activity, Heart, Moon } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 // Import components
@@ -25,45 +25,66 @@ export default function ActivitiesScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
-        {/* Featured Workout */}
-        <View style={styles.featuredContainer}>
-          <LinearGradient
-            colors={[colors.accent[400], colors.accent[600]]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={styles.featuredGradient}
-          >
-            <View style={styles.featuredContent}>
-              <View>
-                <Text style={styles.featuredLabel}>Featured Workout</Text>
-                <Text style={styles.featuredTitle}>Morning Energizer</Text>
-                <Text style={styles.featuredDescription}>
-                  A 15-minute routine to boost your energy and jumpstart your day.
-                </Text>
-                
-                <View style={styles.featuredMeta}>
-                  <View style={styles.featuredMetaItem}>
-                    <Clock size={14} color={colors.white} />
-                    <Text style={styles.featuredMetaText}>15 min</Text>
-                  </View>
-                  <View style={styles.featuredMetaItem}>
-                    <Calendar size={14} color={colors.white} />
-                    <Text style={styles.featuredMetaText}>Daily</Text>
-                  </View>
-                </View>
-                
-                <TouchableOpacity style={styles.featuredButton}>
-                  <Play size={16} color={colors.accent[500]} fill={colors.accent[500]} />
-                  <Text style={styles.featuredButtonText}>Start Now</Text>
-                </TouchableOpacity>
-              </View>
-              
-              <Image
-                source={{ uri: 'https://images.pexels.com/photos/4498151/pexels-photo-4498151.jpeg' }}
-                style={styles.featuredImage}
-              />
-            </View>
-          </LinearGradient>
+        {/* Activity Stats */}
+        <View style={styles.statsContainer}>
+          <View style={styles.statsRow}>
+            <TouchableOpacity style={[styles.statCard, styles.statLarge]}>
+              <LinearGradient
+                colors={[colors.primary[400], colors.primary[600]]}
+                style={styles.statGradient}
+              >
+                <Activity size={24} color={colors.white} />
+                <Text style={styles.statValue}>78%</Text>
+                <Text style={styles.statLabel}>Weekly Goal</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={[styles.statCard, styles.statLarge]}>
+              <LinearGradient
+                colors={[colors.secondary[400], colors.secondary[600]]}
+                style={styles.statGradient}
+              >
+                <Heart size={24} color={colors.white} />
+                <Text style={styles.statValue}>156</Text>
+                <Text style={styles.statLabel}>Avg HR</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.statsRow}>
+            <TouchableOpacity style={[styles.statCard, styles.statMedium]}>
+              <LinearGradient
+                colors={[colors.accent[400], colors.accent[600]]}
+                style={styles.statGradient}
+              >
+                <Clock size={24} color={colors.white} />
+                <Text style={styles.statValue}>45</Text>
+                <Text style={styles.statLabel}>Minutes</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={[styles.statCard, styles.statMedium]}>
+              <LinearGradient
+                colors={[colors.warning[400], colors.warning[600]]}
+                style={styles.statGradient}
+              >
+                <Calendar size={24} color={colors.white} />
+                <Text style={styles.statValue}>5</Text>
+                <Text style={styles.statLabel}>Workouts</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={[styles.statCard, styles.statMedium]}>
+              <LinearGradient
+                colors={[colors.error[400], colors.error[600]]}
+                style={styles.statGradient}
+              >
+                <Moon size={24} color={colors.white} />
+                <Text style={styles.statValue}>85</Text>
+                <Text style={styles.statLabel}>Recovery</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          </View>
         </View>
         
         {/* Activity Categories */}
@@ -234,81 +255,40 @@ const styles = StyleSheet.create({
     padding: spacing.lg,
     paddingTop: spacing.md,
   },
-  featuredContainer: {
+  statsContainer: {
+    marginBottom: spacing.xl,
+  },
+  statsRow: {
+    flexDirection: 'row',
+    gap: spacing.md,
+    marginBottom: spacing.md,
+  },
+  statCard: {
     borderRadius: borderRadius.lg,
     overflow: 'hidden',
-    marginBottom: spacing.xl,
     ...shadows.md,
   },
-  featuredGradient: {
-    borderRadius: borderRadius.lg,
+  statLarge: {
+    flex: 1,
+  },
+  statMedium: {
+    flex: 1,
+  },
+  statGradient: {
     padding: spacing.md,
+    alignItems: 'center',
+    minHeight: 120,
   },
-  featuredContent: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  featuredLabel: {
-    fontSize: typography.fontSizes.xs,
-    fontWeight: typography.fontWeights.medium,
-    color: colors.white + 'cc',
-    marginBottom: spacing.xs / 2,
-  },
-  featuredTitle: {
+  statValue: {
     fontSize: typography.fontSizes.xl,
     fontWeight: typography.fontWeights.bold,
     color: colors.white,
-    marginBottom: spacing.xs,
+    marginTop: spacing.xs,
   },
-  featuredDescription: {
-    fontSize: typography.fontSizes.sm,
-    color: colors.white + 'ee',
-    marginBottom: spacing.sm,
-    maxWidth: '80%',
-  },
-  featuredMeta: {
-    flexDirection: 'row',
-    marginBottom: spacing.md,
-  },
-  featuredMetaItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginRight: spacing.md,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    paddingVertical: spacing.xs / 2,
-    paddingHorizontal: spacing.sm,
-    borderRadius: borderRadius.full,
-  },
-  featuredMetaText: {
+  statLabel: {
     fontSize: typography.fontSizes.xs,
     color: colors.white,
-    marginLeft: spacing.xs / 2,
-  },
-  featuredButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.white,
-    paddingVertical: spacing.sm,
-    paddingHorizontal: spacing.md,
-    borderRadius: borderRadius.md,
-    alignSelf: 'flex-start',
-  },
-  featuredButtonText: {
-    fontSize: typography.fontSizes.sm,
-    fontWeight: typography.fontWeights.medium,
-    color: colors.accent[500],
-    marginLeft: spacing.xs,
-  },
-  featuredImage: {
-    width: 100,
-    height: 100,
-    borderRadius: borderRadius.lg,
-  },
-  sectionTitle: {
-    fontSize: typography.fontSizes.lg,
-    fontWeight: typography.fontWeights.bold,
-    color: colors.neutral[900],
-    marginBottom: spacing.md,
+    opacity: 0.9,
   },
   categoriesContainer: {
     paddingBottom: spacing.md,
@@ -339,6 +319,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginBottom: spacing.md,
+  },
+  sectionTitle: {
+    fontSize: typography.fontSizes.lg,
+    fontWeight: typography.fontWeights.bold,
+    color: colors.neutral[900],
     marginBottom: spacing.md,
   },
   seeAllText: {
