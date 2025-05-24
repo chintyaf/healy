@@ -2,7 +2,7 @@ import React from 'react';
 import { useRouter } from 'expo-router';
 import { StyleSheet, Text, View, ScrollView, SafeAreaView, Image, TouchableOpacity } from 'react-native';
 import { colors, spacing, typography, borderRadius, shadows } from '@/utils/theme';
-import { currentMetrics, healthInsights } from '@/utils/mockData';
+import { currentMetrics, healthInsights, activitySuggestions, weeklyHealthData } from '@/utils/mockData';
 import { Activity, Heart, Moon, Droplet, ArrowRight, TrendingUp } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -31,67 +31,81 @@ export default function HomeScreen() {
         </View>
 
         {/* Quick Stats */}
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.quickStats}
-        >
-          <TouchableOpacity 
-            style={styles.quickStatCard}
-            onPress={() => router.push('/metrics')}
-          >
-            <LinearGradient
-              colors={[colors.primary[400], colors.primary[600]]}
-              style={styles.quickStatGradient}
+        <View style={styles.quickStatsContainer}>
+          <View style={styles.quickStatsRow}>
+            <TouchableOpacity 
+              style={[styles.quickStatCard, styles.quickStatLarge]}
+              onPress={() => router.push('/metrics')}
             >
-              <Heart size={24} color={colors.white} />
-              <Text style={styles.quickStatValue}>{currentMetrics.heartRate.current}</Text>
-              <Text style={styles.quickStatLabel}>BPM</Text>
-            </LinearGradient>
-          </TouchableOpacity>
+              <LinearGradient
+                colors={[colors.primary[400], colors.primary[600]]}
+                style={styles.quickStatGradient}
+              >
+                <Heart size={24} color={colors.white} />
+                <Text style={styles.quickStatValue}>{currentMetrics.heartRate.current}</Text>
+                <Text style={styles.quickStatLabel}>BPM</Text>
+              </LinearGradient>
+            </TouchableOpacity>
 
-          <TouchableOpacity 
-            style={styles.quickStatCard}
-            onPress={() => router.push('/activities')}
-          >
-            <LinearGradient
-              colors={[colors.secondary[400], colors.secondary[600]]}
-              style={styles.quickStatGradient}
+            <TouchableOpacity 
+              style={[styles.quickStatCard, styles.quickStatLarge]}
+              onPress={() => router.push('/metrics')}
             >
-              <Activity size={24} color={colors.white} />
-              <Text style={styles.quickStatValue}>{currentMetrics.steps.current}</Text>
-              <Text style={styles.quickStatLabel}>Steps</Text>
-            </LinearGradient>
-          </TouchableOpacity>
+              <LinearGradient
+                colors={[colors.secondary[400], colors.secondary[600]]}
+                style={styles.quickStatGradient}
+              >
+                <Activity size={24} color={colors.white} />
+                <Text style={styles.quickStatValue}>{currentMetrics.bloodOxygen.current}</Text>
+                <Text style={styles.quickStatLabel}>Blood O₂ %</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          </View>
 
-          <TouchableOpacity 
-            style={styles.quickStatCard}
-            onPress={() => router.push('/metrics')}
-          >
-            <LinearGradient
-              colors={[colors.accent[400], colors.accent[600]]}
-              style={styles.quickStatGradient}
+          <View style={styles.quickStatsRow}>
+            <TouchableOpacity 
+              style={[styles.quickStatCard, styles.quickStatMedium]}
+              onPress={() => router.push('/metrics')}
             >
-              <Moon size={24} color={colors.white} />
-              <Text style={styles.quickStatValue}>{currentMetrics.sleep.lastNight}</Text>
-              <Text style={styles.quickStatLabel}>Hours Sleep</Text>
-            </LinearGradient>
-          </TouchableOpacity>
+              <LinearGradient
+                colors={[colors.accent[400], colors.accent[600]]}
+                style={styles.quickStatGradient}
+              >
+                <Moon size={24} color={colors.white} />
+                <Text style={styles.quickStatValue}>{currentMetrics.sleep.lastNight}</Text>
+                <Text style={styles.quickStatLabel}>Hours Sleep</Text>
+              </LinearGradient>
+            </TouchableOpacity>
 
-          <TouchableOpacity 
-            style={styles.quickStatCard}
-            onPress={() => router.push('/metrics')}
-          >
-            <LinearGradient
-              colors={[colors.warning[400], colors.warning[600]]}
-              style={styles.quickStatGradient}
+            <TouchableOpacity 
+              style={[styles.quickStatCard, styles.quickStatMedium]}
+              onPress={() => router.push('/metrics')}
             >
-              <Droplet size={24} color={colors.white} />
-              <Text style={styles.quickStatValue}>{currentMetrics.water.consumed}</Text>
-              <Text style={styles.quickStatLabel}>L Water</Text>
-            </LinearGradient>
-          </TouchableOpacity>
-        </ScrollView>
+              <LinearGradient
+                colors={[colors.warning[400], colors.warning[600]]}
+                style={styles.quickStatGradient}
+              >
+                <Activity size={24} color={colors.white} />
+                <Text style={styles.quickStatValue}>{Math.round(currentMetrics.steps.percentOfGoal)}%</Text>
+                <Text style={styles.quickStatLabel}>Steps Goal</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+              style={[styles.quickStatCard, styles.quickStatMedium]}
+              onPress={() => router.push('/metrics')}
+            >
+              <LinearGradient
+                colors={[colors.error[400], colors.error[600]]}
+                style={styles.quickStatGradient}
+              >
+                <Droplet size={24} color={colors.white} />
+                <Text style={styles.quickStatValue}>{currentMetrics.water.consumed}</Text>
+                <Text style={styles.quickStatLabel}>L Water</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          </View>
+        </View>
 
         {/* Daily Progress */}
         <View style={styles.section}>
@@ -200,20 +214,30 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: colors.primary[200],
   },
-  quickStats: {
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md,
+  quickStatsContainer: {
+    padding: spacing.lg,
+    backgroundColor: colors.white,
+  },
+  quickStatsRow: {
+    flexDirection: 'row',
     gap: spacing.md,
+    marginBottom: spacing.md,
   },
   quickStatCard: {
     borderRadius: borderRadius.lg,
     overflow: 'hidden',
     ...shadows.md,
   },
+  quickStatLarge: {
+    flex: 1,
+  },
+  quickStatMedium: {
+    flex: 1,
+  },
   quickStatGradient: {
     padding: spacing.md,
     alignItems: 'center',
-    minWidth: 100,
+    minHeight: 120,
   },
   quickStatValue: {
     fontSize: typography.fontSizes.xl,
